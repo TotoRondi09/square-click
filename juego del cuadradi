@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juego del Cuadrado Cliqueador</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: black;
+        }
+
+        #cuadrado-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            position: relative;
+        }
+
+        #cuadrado {
+            width: 100px;
+            height: 100px;
+            background-color: white;
+            cursor: pointer;
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: black;
+        }
+
+        #contador {
+            font-size: 32px;
+            color: red ;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        #mensaje-final {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background-color: #aaa;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="cuadrado-container">
+        <div id="cuadrado" onclick="iniciarJuego()">
+            <div id="contador">0</div>
+        </div>
+    </div>
+
+    <div id="mensaje-final">
+        <p id="mensaje-texto"></p>
+        <button onclick="reiniciarJuego()">Reiniciar Juego</button>
+    </div>
+
+    <script>
+        let contadorClics = 0;
+        let tiempoRestante = 30;
+        let intervalo;
+
+        function iniciarJuego() {
+            if (contadorClics === 0) {
+                intervalo = setInterval(function() {
+                    tiempoRestante--;
+                    document.getElementById('contador').textContent = tiempoRestante;
+
+                    if (tiempoRestante <= 0) {
+                        clearInterval(intervalo);
+                        mostrarMensajeFinal();
+                    }
+                }, 1000);
+            }
+
+            teletransportarCuadrado();
+            document.getElementById('contador').textContent = ++contadorClics;
+        }
+
+        function teletransportarCuadrado() {
+            const nuevaPosX = Math.floor(Math.random() * (window.innerWidth - 100));
+            const nuevaPosY = Math.floor(Math.random() * (window.innerHeight - 100));
+
+            const cuadrado = document.getElementById('cuadrado');
+            cuadrado.style.left = nuevaPosX + 'px';
+            cuadrado.style.top = nuevaPosY + 'px';
+        }
+
+        function mostrarMensajeFinal() {
+            const mensajeFinal = document.getElementById('mensaje-final');
+            const mensajeTexto = document.getElementById('mensaje-texto');
+            mensajeTexto.textContent = `Llegaste a cliquear el cuadrado ${contadorClics} veces en 30 segundos.`;
+            mensajeFinal.style.display = 'block';
+        }
+
+        function reiniciarJuego() {
+            clearInterval(intervalo);
+            contadorClics = 0;
+            tiempoRestante = 30;
+            document.getElementById('contador').textContent = '0';
+            document.getElementById('mensaje-final').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
